@@ -33,4 +33,4 @@ Pasta [PG2026-2/src/Lista2](PG2026-2/src/Lista2).
 | 3. Resposta escrita sobre o posicionamento dos objetos | `exercicio3.md` |
 | 4. Triângulo posicionado em um quadrante | `exercicio4.cpp` |
 | 5. Um triângulo em cada quadrante, por função parametrizada | `exercicio5.cpp` |
-| 6. Em andamento | `exercicio6.cpp` |
+| 6. Triângulo criado na posição do clique do mouse | `exercicio6.cpp` |

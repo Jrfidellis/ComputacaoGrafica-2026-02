@@ -1,4 +1,3 @@
-
 /*
  * Hello Triangle - Código adaptado de:
  *   - https://learnopengl.com/#!Getting-started/Hello-Triangle
@@ -26,6 +25,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 #include <assert.h>
 
 using namespace std;
@@ -46,6 +46,9 @@ using namespace glm;
 // Protótipo da função de callback de teclado
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode);
 
+// Protótipo da função de callback do mouse - chamada a cada clique
+void mouse_button_callback(GLFWwindow *window, int button, int action, int mods);
+
 // Protótipos das funções
 int setupShader();
 // Gera o VAO de um triangulo centrado em (cx, cy), com base e altura iguais a "size".
@@ -54,6 +57,25 @@ int createTriangle(float cx, float cy, float size);
 
 // Dimensões da janela (pode ser alterado em tempo de execução)
 const GLuint WIDTH = 800, HEIGHT = 600;
+
+// Tamanho (base e altura, em pixels) de cada triangulo criado pelo clique
+const float TAMANHO_TRIANGULO = 80.0f;
+
+// Lista com o VAO de cada triangulo criado pelo usuario.
+// Precisa ser global porque a funcao de callback do mouse tem assinatura fixa
+// definida pela GLFW e nao pode receber parametros nossos.
+vector<GLuint> triangulos;
+
+// Paleta de cores: cada novo triangulo usa a proxima cor, ciclicamente
+const int NUM_CORES = 6;
+const GLfloat paleta[NUM_CORES][4] = {
+	{1.0f, 0.35f, 0.35f, 1.0f}, // vermelho
+	{0.35f, 0.9f, 0.45f, 1.0f}, // verde
+	{0.35f, 0.55f, 1.0f, 1.0f}, // azul
+	{1.0f, 0.85f, 0.3f, 1.0f},	// amarelo
+	{0.8f, 0.45f, 1.0f, 1.0f},	// violeta
+	{0.3f, 0.9f, 0.9f, 1.0f}	// ciano
+};
 
 // Código fonte do Vertex Shader (em GLSL): ainda hardcoded
 const GLchar *vertexShaderSource = R"glsl(
@@ -113,6 +135,9 @@ int main()
 	// Fazendo o registro da função de callback para a janela GLFW
 	glfwSetKeyCallback(window, key_callback);
 
+	// Registro da função de callback de clique do mouse
+	glfwSetMouseButtonCallback(window, mouse_button_callback);
+
 	// GLAD: carrega todos os ponteiros d funções da OpenGL
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -134,24 +159,9 @@ int main()
 	// Compilando e buildando o programa de shader
 	GLuint shaderID = setupShader();
 
-	// Gera um triangulo em cada quadrante da janela (800 x 600).
-	// A origem fica no canto superior esquerdo e o y cresce para BAIXO,
-	// entao os quadrantes de cima sao os que tem y menor.
-	// Centro de cada quadrante: (200,150) (600,150) (200,450) (600,450)
-	const int NUM_TRIANGULOS = 4;
-	GLuint VAOs[NUM_TRIANGULOS];
-	VAOs[0] = createTriangle(200.0f, 150.0f, 120.0f); // quadrante superior esquerdo
-	VAOs[1] = createTriangle(600.0f, 150.0f, 120.0f); // quadrante superior direito
-	VAOs[2] = createTriangle(200.0f, 450.0f, 120.0f); // quadrante inferior esquerdo
-	VAOs[3] = createTriangle(600.0f, 450.0f, 120.0f); // quadrante inferior direito
-
-	// Uma cor (R, G, B, A) para cada triangulo, so para diferenciar na tela
-	GLfloat cores[NUM_TRIANGULOS][4] = {
-		{1.0f, 0.35f, 0.35f, 1.0f}, // vermelho
-		{0.35f, 0.9f, 0.45f, 1.0f}, // verde
-		{0.35f, 0.55f, 1.0f, 1.0f}, // azul
-		{1.0f, 0.85f, 0.3f, 1.0f}	// amarelo
-	};
+	// Nenhuma geometria e criada aqui: a tela comeca vazia e cada clique do mouse
+	// gera um novo triangulo, guardado na lista global "triangulos".
+	cout << "Clique com o botao esquerdo do mouse para adicionar triangulos." << endl;
 
 	// Enviando a cor desejada (vec4) para o fragment shader
 	// Utilizamos a variáveis do tipo uniform em GLSL para armazenar esse tipo de info
@@ -187,7 +197,7 @@ int main()
 
 				// Cria uma string e define o FPS como título da janela.
 				char tmp[256];
-				snprintf(tmp, sizeof(tmp), "Ola Lista 2, Ex 5! -- Rossana\tFPS %.2lf", fps);
+				snprintf(tmp, sizeof(tmp), "Ola Lista 2, Ex 6! -- clique para adicionar\tFPS %.2lf", fps);
 				glfwSetWindowTitle(window, tmp);
 
 				title_countdown_s = 0.1; // Reinicia o temporizador para atualizar o título periodicamente.
@@ -209,13 +219,15 @@ int main()
 		glLineWidth(10);
 		glPointSize(20);
 
-		// Agora temos MULTIPLOS VAOs, entao e preciso trocar o VAO ativo (e a cor)
-		// antes de cada drawcall.
-		for (int i = 0; i < NUM_TRIANGULOS; i++)
+		// Desenha todos os triangulos criados ate agora pelos cliques.
+		// Como cada triangulo tem seu proprio VAO, e preciso trocar o VAO ativo
+		// e a cor antes de cada drawcall.
+		for (size_t i = 0; i < triangulos.size(); i++)
 		{
-			glUniform4f(colorLoc, cores[i][0], cores[i][1], cores[i][2], cores[i][3]);
-			glBindVertexArray(VAOs[i]);		// conecta ao buffer deste triangulo
-			glDrawArrays(GL_TRIANGLES, 0, 3); // desenha o triangulo preenchido
+			const GLfloat *cor = paleta[i % NUM_CORES];
+			glUniform4f(colorLoc, cor[0], cor[1], cor[2], cor[3]);
+			glBindVertexArray(triangulos[i]);
+			glDrawArrays(GL_TRIANGLES, 0, 3);
 		}
 
 		glBindVertexArray(0); // Agora faz sentido desvincular, pois ha varios VAOs
@@ -223,8 +235,9 @@ int main()
 		// Troca os buffers da tela
 		glfwSwapBuffers(window);
 	}
-	// Pede pra OpenGL desalocar os buffers
-	glDeleteVertexArrays(NUM_TRIANGULOS, VAOs);
+	// Pede pra OpenGL desalocar os buffers de todos os triangulos criados
+	if (!triangulos.empty())
+		glDeleteVertexArrays((GLsizei)triangulos.size(), triangulos.data());
 	// Finaliza a execução da GLFW, limpando os recursos alocados por ela
 	glfwTerminate();
 	return 0;
@@ -237,6 +250,28 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
+}
+
+// Função de callback do mouse - é chamada pela GLFW a cada clique.
+// A cada clique com o botão esquerdo, cria um novo triângulo centrado na posição
+// do cursor e guarda o VAO dele na lista global "triangulos".
+void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+	{
+		double xpos, ypos;
+		glfwGetCursorPos(window, &xpos, &ypos);
+
+		int larguraJanela, alturaJanela;
+		glfwGetWindowSize(window, &larguraJanela, &alturaJanela);
+		float x = (float)xpos * (float)WIDTH / (float)larguraJanela;
+		float y = (float)ypos * (float)HEIGHT / (float)alturaJanela;
+
+		triangulos.push_back(createTriangle(x, y, TAMANHO_TRIANGULO));
+
+		cout << "Triangulo " << triangulos.size()
+			 << " criado em (" << x << ", " << y << ")" << endl;
+	}
 }
 
 // Esta função está bastante hardcoded - objetivo é compilar e "buildar" um programa de
@@ -296,7 +331,7 @@ int setupShader()
 //   cx, cy -> posicao do centro do triangulo
 //   size   -> largura da base e tambem a altura do triangulo
 // Como o y cresce para BAIXO, o vertice do topo usa (cy - metade).
-// Parametrizar a funcao permite criar varios triangulos sem repetir codigo.
+// Parametrizar a funcao permite criar um triangulo novo a cada clique.
 int createTriangle(float cx, float cy, float size)
 {
 	float metade = size / 2.0f;
