@@ -1,0 +1,6 @@
+{
+    "cmake.sourceDirectory": "${workspaceFolder}/PG2026-2",
+    "cmake.buildDirectory": "${workspaceFolder}/PG2026-2/build",
+    "cmake.configureOnOpen": false,
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/PG2026-2/build/compile_commands.json"
+}
