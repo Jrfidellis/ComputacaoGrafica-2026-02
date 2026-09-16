@@ -5,7 +5,7 @@
             "name": "Rodar exercicio ativo (CMake)",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/PG2026-2/build/${fileBasenameNoExtension}",
+            "program": "${workspaceFolder}/PG2026-2/build/${fileDirnameBasename}/${fileBasenameNoExtension}",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/PG2026-2",

@@ -4,7 +4,7 @@
         {
             "label": "CMake: build active exercise",
             "type": "shell",
-            "command": "[ -f PG2026-2/build/CMakeCache.txt ] || cmake -S PG2026-2 -B PG2026-2/build; cmake --build PG2026-2/build --target ${fileBasenameNoExtension}",
+            "command": "([ -f PG2026-2/build/CMakeCache.txt ] || cmake -S PG2026-2 -B PG2026-2/build -DFETCHCONTENT_UPDATES_DISCONNECTED=ON) && cmake --build PG2026-2/build --target ${fileDirnameBasename}_${fileBasenameNoExtension}",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
@@ -15,7 +15,7 @@
                 "kind": "build",
                 "isDefault": true
             },
-            "detail": "Compila o exercicio do arquivo aberto (o alvo CMake tem o mesmo nome do .cpp)"
+            "detail": "Compila o exercicio do arquivo aberto. Alvo CMake: <pasta>_<arquivo>, ex.: Lista2_exercicio1"
         }
     ]
 }

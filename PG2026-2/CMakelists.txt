@@ -13,6 +13,7 @@ FetchContent_Declare(
   glfw
   GIT_REPOSITORY https://github.com/glfw/glfw.git
   GIT_TAG master  # Define a versão desejada da GLFW
+  GIT_SHALLOW TRUE
 )
 FetchContent_MakeAvailable(glfw)
 
@@ -20,6 +21,7 @@ FetchContent_Declare(
   glm
   GIT_REPOSITORY https://github.com/g-truc/glm.git
   GIT_TAG master
+  GIT_SHALLOW TRUE
 )
 FetchContent_MakeAvailable(glm)
 
@@ -28,6 +30,7 @@ FetchContent_Declare(
   stb_image
   GIT_REPOSITORY https://github.com/nothings/stb.git
   GIT_TAG master
+  GIT_SHALLOW TRUE
 )
 FetchContent_MakeAvailable(stb_image)
 
@@ -43,6 +46,7 @@ include_directories(${stb_image_SOURCE_DIR})
 set(EXERCISES
     Exemplos/HelloTriangle
     Lista1
+    Lista2
 )
 
 add_compile_options(-Wno-pragmas)
@@ -70,7 +74,8 @@ endif()
 
 foreach(EXERCISE ${EXERCISES})
     # Coleta todos os .cpp dentro do diretório do exercício
-    file(GLOB EXE_SOURCES src/${EXERCISE}/*.cpp)
+    # CONFIGURE_DEPENDS faz o CMake reexecutar a busca quando um .cpp é criado/removido
+    file(GLOB EXE_SOURCES CONFIGURE_DEPENDS src/${EXERCISE}/*.cpp)
 
     # Separa os arquivos que têm main() dos arquivos de apoio
     set(MAIN_SOURCES "")
@@ -88,18 +93,30 @@ foreach(EXERCISE ${EXERCISES})
         message(WARNING "Nenhum arquivo com main() encontrado em src/${EXERCISE}")
     endif()
 
+    # Nome da pasta do exercício (ex.: Lista1, Lista2, HelloTriangle)
+    get_filename_component(EXERCISE_DIR ${EXERCISE} NAME)
+
     foreach(MAIN_SOURCE ${MAIN_SOURCES})
         # Extrai o nome do arquivo (sem extensão) como nome do executável
         get_filename_component(EXE_NAME ${MAIN_SOURCE} NAME_WE)
 
+        # O alvo CMake recebe a pasta como prefixo (ex.: Lista2_exercicio1) para que
+        # arquivos de mesmo nome em listas diferentes não entrem em conflito
+        set(TARGET_NAME ${EXERCISE_DIR}_${EXE_NAME})
+
         # Cria o executável com o .cpp do main + arquivos de apoio + glad.c
-        add_executable(${EXE_NAME} ${MAIN_SOURCE} ${SUPPORT_SOURCES} ${GLAD_C_FILE})
+        add_executable(${TARGET_NAME} ${MAIN_SOURCE} ${SUPPORT_SOURCES} ${GLAD_C_FILE})
+
+        # O binário mantém o nome do .cpp e é gerado em build/<pasta>/ (ex.: build/Lista2/exercicio1)
+        set_target_properties(${TARGET_NAME} PROPERTIES
+            OUTPUT_NAME ${EXE_NAME}
+            RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${EXERCISE_DIR})
 
         # Configura includes e bibliotecas
-        target_include_directories(${EXE_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include/glad ${glm_SOURCE_DIR} ${stb_image_SOURCE_DIR})
+        target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include/glad ${glm_SOURCE_DIR} ${stb_image_SOURCE_DIR})
 
-        target_link_libraries(${EXE_NAME} glfw ${OPENGL_LIBS} glm::glm )
+        target_link_libraries(${TARGET_NAME} glfw ${OPENGL_LIBS} glm::glm )
 
-        message(STATUS "Executável: ${EXE_NAME} (src/${EXERCISE})")
+        message(STATUS "Executável: ${EXERCISE_DIR}/${EXE_NAME} (alvo ${TARGET_NAME})")
     endforeach()
 endforeach()
