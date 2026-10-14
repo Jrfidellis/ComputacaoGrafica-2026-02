@@ -166,6 +166,17 @@ void updateWorld(World &w, const InputState &input, float dt)
 	integrateEntities(w.entidades, w.cfg, dt, worldSize(w.mapa));
 
 	// 5. Colisoes
+	//
+	// Repare no que NAO esta aqui: nao existe colisao entre o aviao e o
+	// tanque. E deliberado, e nao esquecimento.
+	//
+	// O aviao voa ACIMA dos veiculos de solo. Duas caixas que se sobrepoem na
+	// projecao vista de cima nao querem dizer que os objetos se tocaram:
+	// querem dizer apenas que um esta passando por cima do outro, que e
+	// exatamente o que o jogador precisa fazer para bombardear. Sobreposicao
+	// em 2D nao e colisao quando os objetos estao em alturas diferentes.
+	//
+	// O unico dano que um tanque causa e com o proprio tiro, logo abaixo.
 	w.score += resolverBalas(w);
 	w.score += detonateBombs(w.entidades, w.cfg);
 
