@@ -23,13 +23,6 @@ void drawTerrain(Renderer &r, const World &w)
 	float ts = m.tileSize;
 	Vec2 cam = w.camera.topLeft;
 
-	// CULLING: so os tiles dentro da janela sao desenhados.
-	// Sem isto seriam 96 x 96 = 9216 desenhos por frame. Com isto sao cerca
-	// de 26 x 20 = 520, o que custa menos de 2 ms num Mac com chip M.
-	//
-	// Cada tile e um desenho com sua propria matriz model. Daria para juntar
-	// o mapa inteiro num VBO so e ser mais rapido, mas isso esconderia
-	// exatamente o conceito que o trabalho pede para demonstrar.
 	int c0 = std::max(0, (int)std::floor(cam.x / ts));
 	int c1 = std::min(m.largura - 1, (int)std::ceil((cam.x + r.telaW) / ts));
 	int l0 = std::max(0, (int)std::floor(cam.y / ts));
