@@ -34,3 +34,24 @@ Pasta [PG2026-2/src/Lista2](PG2026-2/src/Lista2).
 | 4. Triângulo posicionado em um quadrante | `exercicio4.cpp` |
 | 5. Um triângulo em cada quadrante, por função parametrizada | `exercicio5.cpp` |
 | 6. Triângulo criado na posição do clique do mouse | `exercicio6.cpp` |
+
+## Trabalho Grau A - Voo Rasante
+
+Jogo 2D de avião visto de cima, na pasta [trab-grau-a](trab-grau-a). O avião
+fica sempre no centro da tela, o mundo rola por baixo e um radar quadrado no
+canto inferior esquerdo mostra o mapa inteiro.
+
+O código é separado em duas camadas, e a fronteira é imposta pelo CMake: a
+biblioteca `game_core` tem as regras do jogo e não enxerga OpenGL, então
+incluir a GLAD em `src/game/` é erro de compilação. O alvo `simtest` roda a
+simulação completa sem abrir janela.
+
+```
+cd trab-grau-a
+cmake -S . -B build
+cmake --build build -j4
+./build/voo_rasante
+```
+
+Detalhes de arquitetura, decisões de implementação e checklist de requisitos
+em [trab-grau-a/README.md](trab-grau-a/README.md).
