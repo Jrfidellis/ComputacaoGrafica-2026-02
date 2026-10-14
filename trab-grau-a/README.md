@@ -395,7 +395,24 @@ Editar `config/game.cfg` muda o jogo **sem recompilar**.
 - [x] Extra: tela de fim de jogo e reinício
 - [ ] Som
 
-## Screenshots
+## Vídeos da apresentação
+
+Gravações na pasta [apresentacao](apresentacao). Cada uma cobre um dos tópicos
+que o enunciado pede para explicar.
+
+| Vídeo | Assunto | Arquivos mostrados |
+|---|---|---|
+| [demo.mov](apresentacao/demo.mov) | O jogo rodando: voo, metralhadora, bomba, radar e a tecla `H` | |
+| [estrutura.mov](apresentacao/estrutura.mov) | Estrutura geral do código e a separação entre regras e desenho | `src/game/world.cpp` |
+| [vao.mov](apresentacao/vao.mov) | VAO, atributos do vértice e a matriz de model | `src/render/renderer.cpp`, `shaders/sprite.vert` |
+| [sprite.mov](apresentacao/sprite.mov) | Gerenciamento dos sprites e a animação da explosão | `src/core/sprites.cpp`, `src/render/layers.cpp` |
+| [parallax.mov](apresentacao/parallax.mov) | Camadas de fundo, fatores de parallax e o culling do terreno | `src/render/layers.cpp` |
+
+Os arquivos estão em `.mov` e abrem baixando pelo GitHub. O player embutido do
+GitHub só funciona para vídeos enviados como anexo de issue ou comentário, e
+não para caminhos relativos do repositório.
+
+## Screenshot
 
 ![Voo Rasante](screenshot.png)
 

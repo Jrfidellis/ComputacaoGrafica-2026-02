@@ -37,6 +37,8 @@ Pasta [PG2026-2/src/Lista2](PG2026-2/src/Lista2).
 
 ## Trabalho Grau A - Voo Rasante
 
+**→ [Documentação completa do trabalho](trab-grau-a/README.md)**
+
 Jogo 2D de avião visto de cima, na pasta [trab-grau-a](trab-grau-a). O avião
 fica sempre no centro da tela, o mundo rola por baixo e um radar quadrado no
 canto inferior esquerdo mostra o mapa inteiro.
@@ -53,5 +55,14 @@ cmake --build build -j4
 ./build/voo_rasante
 ```
 
-Detalhes de arquitetura, decisões de implementação e checklist de requisitos
-em [trab-grau-a/README.md](trab-grau-a/README.md).
+### Vídeos
+
+Gravações em [trab-grau-a/apresentacao](trab-grau-a/apresentacao):
+[demo de gameplay](trab-grau-a/apresentacao/demo.mov) ·
+[estrutura do código](trab-grau-a/apresentacao/estrutura.mov) ·
+[VAO e matriz de model](trab-grau-a/apresentacao/vao.mov) ·
+[sprites e animação](trab-grau-a/apresentacao/sprite.mov) ·
+[camadas e parallax](trab-grau-a/apresentacao/parallax.mov)
+
+Arquitetura, decisões de implementação e checklist de requisitos em
+**[trab-grau-a/README.md](trab-grau-a/README.md)**.
