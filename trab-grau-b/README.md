@@ -90,7 +90,6 @@ cada sistema (no Windows, por exemplo, as quatro viram 0). A tabela `SETAS` em
 | `main.py` | Janela, teclado, mouse, modos foto e vídeo, salvar e reset |
 | `efeitos.py` | Os 16 efeitos com descrição e parâmetro, e a aplicação por canal |
 | `stickers.py` | Carrega os stickers, cola com transparência e detecta rostos |
-| `gerar_stickers.py` | Desenha os 6 stickers com canal alfa. Já foi rodado, os PNGs estão no repositório |
 | `assets/imagens/` | Foto padrão (`baboon.jpg`) e segunda imagem das operações (`fruits.jpg`) |
 | `assets/stickers/` | Stickers PNG com canal alfa |
 | `requirements.txt` | Dependências: OpenCV e NumPy |
@@ -193,10 +192,6 @@ C = c1 * alfa + c2 * (1 - alfa)
 dividido por 255. A conta é feita de uma vez em toda a região do sticker com
 NumPy. Quando o sticker passa da borda da imagem, só a parte que cabe é colada.
 
-Os stickers foram desenhados com as primitivas do OpenCV (`circle`, `ellipse`,
-`fillPoly`, `putText`) em `gerar_stickers.py`. A borda branca é uma dilatação
-do canal alfa, o mesmo filtro de máximo da lista de efeitos.
-
 Os stickers ficam numa lista separada dos efeitos e são desenhados sempre por
 cima deles. Funcionam nos dois modos, mas no vídeo ficam parados na tela.
 
@@ -271,4 +266,4 @@ Saturação e nitidez aplicadas em sequência, com quatro stickers colados.
   repositório do OpenCV (https://github.com/opencv/opencv).
 - Detector de rosto: `haarcascade_frontalface_default.xml`, que já vem no
   pacote `opencv-python`.
-- Stickers: desenhados para este trabalho em `gerar_stickers.py`.
+- Stickers: desenhados para este trabalho.
