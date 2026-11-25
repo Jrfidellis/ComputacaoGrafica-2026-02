@@ -66,3 +66,23 @@ Gravações em [trab-grau-a/apresentacao](trab-grau-a/apresentacao):
 
 Arquitetura, decisões de implementação e checklist de requisitos em
 **[trab-grau-a/README.md](trab-grau-a/README.md)**.
+
+## Trabalho Grau B - Stories Lab
+
+**→ [Documentação completa do trabalho](trab-grau-b/README.md)**
+
+Aplicativo de efeitos em imagens e vídeo no estilo dos stories do Instagram,
+na pasta [trab-grau-b](trab-grau-b), feito em Python com OpenCV. Funciona com
+uma foto do disco ou com a webcam, e tem 12 filtros, 4 operações com duas
+imagens, seleção de canal (RGB, R, G ou B), 6 stickers com canal alfa colados
+pelo mouse e stickers automáticos nos rostos com Haar Cascade.
+
+```
+cd trab-grau-b
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python main.py
+```
+
+![Stories Lab](trab-grau-b/screenshot.png)
